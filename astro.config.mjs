@@ -6,7 +6,8 @@ import starlight from '@astrojs/starlight';
 import mdx from '@astrojs/mdx';
 
 export default defineConfig({
-  site: '#!',
+  site: 'https://themewagon.github.io',
+  base: '/screwfast',
   image: {
     domains: ['images.unsplash.com'],
   },
@@ -96,14 +97,14 @@ export default defineConfig({
           tag: 'meta',
           attrs: {
             property: 'og:image',
-            content: 'https://screwfast.uk' + '/social.webp',
+            content: 'https://themewagon.github.io/screwfast' + '/social.webp',
           },
         },
         {
           tag: 'meta',
           attrs: {
             property: 'twitter:image',
-            content: 'https://screwfast.uk' + '/social.webp',
+            content: 'https://themewagon.github.io/screwfast' + '/social.webp',
           },
         },
       ],

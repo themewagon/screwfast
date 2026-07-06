@@ -35,7 +35,6 @@ const siteURL = `${Astro.site}`; // Set the website URL in astro.config.mjs
 const author = SITE.author;
 const canonical = new URL(Astro.url.pathname, Astro.site || Astro.url.origin)
   .href;
-const basePath = Astro.url.pathname;
 const socialImageRes = await getImage({
   src: OG.image,
   width: 1200,
@@ -49,11 +48,12 @@ const languages: { [key: string]: string } = {
 };
 
 function createHref(lang: string, prefix: string, path: string): string {
-  // Remove any existing language prefix
-  const cleanPath = path.replace(/^\/(fr|en)\//, '/');
+  // Remove screwfast and any language prefix
+  const cleanPath = path.replace(/^(\/screwfast)?\/(fr|en)\//, '/').replace(/^\/screwfast\/?/, '/');
 
-  // Add the correct language prefix if needed
-  const basePath = prefix ? `/${prefix}${cleanPath}` : cleanPath;
+  // Add the correct language prefix and screwfast prefix
+  const pathWithLang = prefix ? `/${prefix}${cleanPath}` : cleanPath;
+  const basePath = `/screwfast${pathWithLang}`;
   const normalizedBasePath = basePath.replace(/\/\/+/g, '/');
 
   return `${siteURL.slice(0, -1)}${normalizedBasePath}`;
@@ -95,7 +95,7 @@ const appleTouchIcon = await getImage({
 <link rel="canonical" href={canonical} />
 {
   Object.entries(languages).map(([lang, prefix]) => {
-    const cleanPath = fullPath.replace(/^\/(fr|en)\//, '/');
+    const cleanPath = fullPath.replace(/^(\/screwfast)?\/(fr|en)\//, '/').replace(/^\/screwfast\/?/, '/');
     const href = createHref(lang, prefix, cleanPath);
     return <link rel="alternate" hreflang={lang} href={href} />;
   })
@@ -104,7 +104,7 @@ const appleTouchIcon = await getImage({
 {/* Facebook Meta Tags */}
 <meta
   property="og:locale"
-  content={basePath.startsWith('/fr') ? 'fr_FR' : 'en_US'}
+  content={Astro.currentLocale === 'fr' ? 'fr_FR' : 'en_US'}
 />
 <meta property="og:url" content={siteURL} />
 <meta property="og:type" content="website" />
@@ -125,12 +125,12 @@ const appleTouchIcon = await getImage({
 <meta name="twitter:image" content={socialImage} />
 
 {/* Links to the webmanifest and sitemap */}
-<link rel="manifest" href="/manifest.json" />
+<link rel="manifest" href="/screwfast/manifest.json" />
 {/* https://docs.astro.build/en/guides/integrations-guide/sitemap/ */}
-<link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="sitemap" href="/screwfast/sitemap-index.xml" />
 
 {/* Links for favicons */}
-<link href="/favicon.ico" rel="icon" sizes="any" type="image/x-icon" />
+<link href="/screwfast/favicon.ico" rel="icon" sizes="any" type="image/x-icon" />
 <link href={faviconSvg.src} rel="icon" type="image/svg+xml" sizes="any" />
 <meta name="mobile-web-app-capable" content="yes" />
 <link href={appleTouchIcon.src} rel="apple-touch-icon" />
